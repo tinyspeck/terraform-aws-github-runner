@@ -203,7 +203,21 @@ resource "aws_security_group" "runner_sg" {
 
   vpc_id = var.vpc_id
 
-  ingress = []
+  dynamic "ingress" {
+    for_each = var.ingress_rules
+    iterator = each
+    content {
+      cidr_blocks      = each.value.cidr_blocks
+      ipv6_cidr_blocks = each.value.ipv6_cidr_blocks
+      prefix_list_ids  = each.value.prefix_list_ids
+      from_port        = each.value.from_port
+      to_port          = each.value.to_port
+      protocol         = each.value.protocol
+      security_groups  = each.value.security_groups
+      self             = each.value.self
+      description      = each.value.description
+    }
+  }
 
   dynamic "egress" {
     for_each = var.egress_rules

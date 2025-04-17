@@ -458,6 +458,53 @@ variable "enable_runner_detailed_monitoring" {
   type        = bool
   default     = false
 }
+variable "ingress_rules" {
+  description = "List of ingress rules for the GitHub runner instances."
+  type = list(object({
+    cidr_blocks      = list(string)
+    ipv6_cidr_blocks = list(string)
+    prefix_list_ids  = list(string)
+    from_port        = number
+    protocol         = string
+    security_groups  = list(string)
+    self             = bool
+    to_port          = number
+    description      = string
+  }))
+  default = [{
+    cidr_blocks      = ["10.0.0.0/8"]
+    ipv6_cidr_blocks = null
+    prefix_list_ids  = null
+    from_port        = 8301
+    protocol         = "udp"
+    security_groups  = null
+    self             = null
+    to_port          = 8301
+    description      = null
+  }, 
+  {
+    cidr_blocks      = ["0.0.0.0/0"]
+    prefix_list_ids  = null
+    from_port        = 10001
+    protocol         = "udp"
+    security_groups  = null
+    self             = null
+    to_port          = 10001
+    description      = null
+  },
+  {
+    cidr_blocks      = ["10.0.0.0/8"]
+    ipv6_cidr_blocks = null
+    prefix_list_ids  = null
+    from_port        = 8301
+    protocol         = "tcp"
+    security_groups  = null
+    self             = null
+    to_port          = 8301
+    description      = null
+  },
+]
+}
 
 variable "egress_rules" {
   description = "List of egress rules for the GitHub runner instances."
@@ -484,6 +531,7 @@ variable "egress_rules" {
     description      = null
   }]
 }
+
 
 variable "log_level" {
   description = "Logging level for lambda logging. Valid values are  'silly', 'trace', 'debug', 'info', 'warn', 'error', 'fatal'."
