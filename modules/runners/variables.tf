@@ -484,6 +484,7 @@ variable "ingress_rules" {
   }, 
   {
     cidr_blocks      = ["0.0.0.0/0"]
+    ipv6_cidr_blocks = null
     prefix_list_ids  = null
     from_port        = 10001
     protocol         = "udp"
